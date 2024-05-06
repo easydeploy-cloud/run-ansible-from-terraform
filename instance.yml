@@ -1,0 +1,25 @@
+---
+- hosts: all
+  remote_user: ubuntu
+  become: true
+  name: install apache server 
+  tasks:
+    - name: Install apache
+      apt:
+        name: apache2
+        update_cache: yes
+        state: latest
+    - name: run apache
+      service:
+        name: apache2
+        state: started
+    - name: create content
+      copy:
+        content: "Ansible Working Successfully"
+        dest: /var/www/html/index.html
+      notify: Restart Apache
+  handlers:
+    - name: Restart Apache
+      service:
+        name: apache2
+        state: restarted
